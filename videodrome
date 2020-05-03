@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# autostart in ~/.bash_profile
+
+# v.1.0.0
+
+
+MAXSECONDS=30 # maximum duration of clip
+
+getrandompos() {
+	((h=${1}/3600))
+	((m=(${1}%3600)/60))
+	((s=${1}%60))
+	
+	printf "%02d:%02d:%02d\n" $h $m $s
+}
+
+sudo mount -t exfat -o ro /dev/sda1 /media/usb
+FOLDER="/media/usb/videodrome"
+
+while true; do # infinite loop
+
+	pkill omxplayer # kill omxplayer if it is still active (timelimit does not kill omxplayer?)
+
+	FILE=$( find "$FOLDER/" -type f -print0 | shuf -z -n 1 ) # pick random file
+	clear # clear screen
+	#echo "FILE "$FILE
+
+	LENGTH="$(mediainfo --Inform="Video;%Duration%" $FILE)" # length is in ms
+	if [ -z "$LENGTH" ]; then # skip this video if we cannot find length
+		continue
+	fi
+	((LENGTH=${LENGTH}/1000)) # convert to seconds
+	((RANDOMPOS="$(shuf -i 0-$LENGTH -n 1)"))
+	RANDOMPOSOMX="$(getrandompos $RANDOMPOS)" # convert to hh:mm:ss
+	((RANDOMLENGTH="$(shuf -i 0-$MAXSECONDS -n 1)"))
+	#echo "LENGTH: $LENGTH / RANDOMPOS: $RANDOMPOS / RANDOMPOSOMX: $RANDOMPOSOMX / RANDOMLENGTH: $RANDOMLENGTH"
+	timelimit -t $RANDOMLENGTH -T $RANDOMLENGTH -q omxplayer --pos $RANDOMPOSOMX --no-osd $FILE > /dev/null
+done
+
