@@ -1,0 +1,14 @@
+[Unit]
+Description=Videodrome
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=%h/videodrome/videodrome
+Restart=always
+RestartSec=5s
+KillMode=process
+TimeoutSec=infinity
+
+[Install]
+WantedBy=default.target
+
