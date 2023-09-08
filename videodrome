@@ -2,13 +2,18 @@
 
 FOLDER="/mnt/videodrome-pal"
 
+clear
+
 while true; do # infinite loop
 
 	FILE=$( find "$FOLDER/" -type f -print0 | shuf -z -n 1 ) # pick random file
 	clear
 
 	omxplayer "$FILE" >> /dev/null
+	clear
+
 	wait
+	clear
 
 done
 
