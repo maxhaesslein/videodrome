@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mount /dev/sda1 /mnt
+
 FOLDER="/mnt/videodrome-pal"
 
 clear
@@ -16,4 +18,6 @@ while true; do # infinite loop
 	clear
 
 done
+
+umount /mnt
 
