@@ -1,0 +1,14 @@
+#!/bin/bash
+
+FOLDER="/mnt/videodrome-pal"
+
+while true; do # infinite loop
+
+	FILE=$( find "$FOLDER/" -type f -print0 | shuf -z -n 1 ) # pick random file
+	clear
+
+	omxplayer "$FILE" >> /dev/null
+	wait
+
+done
+
